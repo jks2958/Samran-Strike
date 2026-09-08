@@ -3,7 +3,11 @@ extends CharacterBody3D
 @onready var camera: Camera3D = $Camera3D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 @onready var raycast: RayCast3D = $Camera3D/RayCast3D
-@onready var weapon: Weapon = $Camera3D/pistol
+@onready var pistol: Weapon = $Camera3D/pistol
+
+## Tracks equipped weapons and which one is active. Only PRIMARY (the
+## pistol) is populated for now; SECONDARY/MELEE are ready for future weapons.
+var inventory: WeaponInventory = WeaponInventory.new()
 
 ## Number of shots before a player dies
 @export var health : int = 2
@@ -32,10 +36,12 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	if not is_multiplayer_authority(): return
 
+	inventory.equip_weapon(WeaponInventory.Slot.PRIMARY, pistol)
+
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	camera.current = true
 	position = spawns[randi() % spawns.size()]
-	raycast.target_position = Vector3(0, 0, -weapon.get_range())
+	raycast.target_position = Vector3(0, 0, -inventory.get_current_weapon().get_range())
 
 func _process(_delta: float) -> void:
 	sensitivity = Global.sensitivity
@@ -55,14 +61,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		camera.rotate_x(-event.relative.y * sensitivity)
 	camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 
+	var current_weapon: Weapon = inventory.get_current_weapon()
+
 	var shoot_pressed := Input.is_action_pressed("shoot")
 	var shoot_just_pressed := Input.is_action_just_pressed("shoot")
-	if weapon.wants_to_fire(shoot_pressed, shoot_just_pressed) and weapon.try_fire():
+	if current_weapon and current_weapon.wants_to_fire(shoot_pressed, shoot_just_pressed) and current_weapon.try_fire():
 		play_shoot_effects.rpc()
-		weapon.play_fire_sound()
+		current_weapon.play_fire_sound()
 		if raycast.is_colliding() && str(raycast.get_collider()).contains("CharacterBody3D") :
 			var hit_player: Object = raycast.get_collider()
-			hit_player.recieve_damage.rpc_id(hit_player.get_multiplayer_authority(), weapon.get_damage())
+			hit_player.recieve_damage.rpc_id(hit_player.get_multiplayer_authority(), current_weapon.get_damage())
+
+	if current_weapon and Input.is_action_just_pressed("reload"):
+		current_weapon.start_reload()
 
 	if Input.is_action_just_pressed("respawn"):
 		recieve_damage(2)
@@ -110,7 +121,9 @@ func _physics_process(delta: float) -> void:
 func play_shoot_effects() -> void:
 	anim_player.stop()
 	anim_player.play("shoot")
-	weapon.play_muzzle_flash()
+	var current_weapon: Weapon = inventory.get_current_weapon()
+	if current_weapon:
+		current_weapon.play_muzzle_flash()
 
 @rpc("any_peer")
 func recieve_damage(damage:= 1) -> void:

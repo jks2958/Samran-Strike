@@ -17,8 +17,11 @@ enum FireMode {
 @export var fire_rate: float = 2.5
 ## Rounds held in the magazine. -1 means unlimited ammo.
 @export var magazine_size: int = -1
-## Rounds held in reserve, restored to the magazine on reload. -1 means unlimited.
+## Starting rounds held in reserve, restored to the magazine on reload.
+## -1 means unlimited reserve ammo.
 @export var reserve_ammo: int = -1
+## Ceiling on reserve ammo (e.g. from future ammo pickups). -1 means unlimited.
+@export var max_reserve_ammo: int = -1
 ## Seconds a reload takes to complete.
 @export var reload_time: float = 0.0
 ## Maximum hitscan distance, in meters.

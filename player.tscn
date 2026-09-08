@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://b2qhxdrnviyqf"]
+[gd_scene load_steps=23 format=3 uid="uid://b2qhxdrnviyqf"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_8tdgl"]
 [ext_resource type="PackedScene" uid="uid://cutckskghm3gy" path="res://imports/pistol.glb" id="2_0s6en"]
@@ -6,6 +6,9 @@
 [ext_resource type="AudioStream" uid="uid://bevvvtb8n4qfc" path="res://audio/645317__darkshroom__m9_noisegate-1780.ogg" id="3_pilvn"]
 [ext_resource type="Texture2D" uid="uid://duu4nryr7idps" path="res://textures/kenney_particle_pack/circle_05.png" id="4_ssmal"]
 [ext_resource type="Script" path="res://scripts/ui/crosshair.gd" id="5_fnci2"]
+[ext_resource type="Script" path="res://scripts/ui/ammo_counter.gd" id="6_ammo01"]
+[ext_resource type="Script" path="res://scripts/weapons/weapon.gd" id="7_wpn_script"]
+[ext_resource type="Resource" path="res://resources/weapons/pistol_data.tres" id="8_wpn_data"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_7800j"]
 
@@ -175,6 +178,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 
 [node name="pistol" parent="Camera3D" instance=ExtResource("2_0s6en")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.25, -0.5)
+script = ExtResource("7_wpn_script")
+weapon_data = ExtResource("8_wpn_data")
 
 [node name="GunshotSound" type="AudioStreamPlayer3D" parent="Camera3D/pistol"]
 unique_name_in_owner = true
@@ -215,6 +220,21 @@ scale = Vector2(0.03, 0.03)
 texture = ExtResource("4_ssmal")
 stretch_mode = 5
 script = ExtResource("5_fnci2")
+
+[node name="AmmoLabel" type="Label" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -40.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+horizontal_alignment = 2
+script = ExtResource("6_ammo01")
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="child_order_changed" from="MeshInstance3D" to="." method="_on_mesh_instance_3d_child_order_changed"]
