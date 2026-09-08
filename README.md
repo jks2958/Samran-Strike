@@ -1,14 +1,19 @@
+<h1 align="center">Samran Strike</h1>
+
 <p align="center">
   <img src="https://github.com/user-attachments/assets/38561c4c-d22c-4d7d-9dc2-8fd8de6a8f66" alt="FPS multiplayer template screenshot" />
 </p>
 
 <p align="center">
-An FPS multiplayer template with everything you'd need to get started. Includes a full map with custom 3d assets.
+Samran Strike is a private multiplayer tactical FPS, built on top of (and rebranded from) the open-source
+"FPS Multiplayer Template" by Dahoom AlShaya. Includes a full map with custom 3d assets.
 There is a fully featured main menu, pause menu and options panel. Did I also mention it has full controller support?
 </p>
 
 ## Installation
-  Open the godot project manager, switch to the asset library and search ``FPS multiplayer template`` and download. Another method is to clone the repo into your godot projects folder and open it from there.
+  This is a private fork and is not published to the Godot Asset Library. Clone this repository into your Godot
+  projects folder and open it from there. (The upstream project this was forked from can still be installed via
+  the asset library by searching ``FPS multiplayer template``.)
 
 ## Features
 - Multiplayer

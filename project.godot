@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="FPS Multiplayer Template"
-config/tags=PackedStringArray("fps", "gamepad", "menu", "multiplayer")
+config/name="Samran Strike"
+config/tags=PackedStringArray("fps", "gamepad", "menu", "multiplayer", "tactical")
 run/main_scene="res://world.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
