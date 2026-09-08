@@ -1,4 +1,7 @@
-[gd_scene load_steps=5 format=4 uid="uid://c5c1lnw5ajt3c"]
+[gd_scene load_steps=7 format=4 uid="uid://c5c1lnw5ajt3c"]
+
+[ext_resource type="Script" path="res://scripts/weapons/weapon.gd" id="1_wpn_script"]
+[ext_resource type="Resource" path="res://resources/weapons/pistol_data.tres" id="2_wpn_data"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jo343"]
 resource_name = "PistolBlack"
@@ -69,6 +72,8 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_jjkk2")
 
 [node name="pistol" type="Node3D"]
+script = ExtResource("1_wpn_script")
+weapon_data = ExtResource("2_wpn_data")
 
 [node name="Cube" type="MeshInstance3D" parent="."]
 transform = Transform3D(0, 0, 0.0361792, 0, 0.1, 0, -0.05, 0, 0, 0, 0, 0)

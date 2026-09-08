@@ -2,9 +2,8 @@ extends CharacterBody3D
 
 @onready var camera: Camera3D = $Camera3D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
-@onready var muzzle_flash: GPUParticles3D = $Camera3D/pistol/GPUParticles3D
 @onready var raycast: RayCast3D = $Camera3D/RayCast3D
-@onready var gunshot_sound: AudioStreamPlayer3D = %GunshotSound
+@onready var weapon: Weapon = $Camera3D/pistol
 
 ## Number of shots before a player dies
 @export var health : int = 2
@@ -36,6 +35,7 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	camera.current = true
 	position = spawns[randi() % spawns.size()]
+	raycast.target_position = Vector3(0, 0, -weapon.get_range())
 
 func _process(_delta: float) -> void:
 	sensitivity = Global.sensitivity
@@ -55,13 +55,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		camera.rotate_x(-event.relative.y * sensitivity)
 	camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 
-	if Input.is_action_just_pressed("shoot") \
-			and anim_player.current_animation != "shoot" :
+	var shoot_pressed := Input.is_action_pressed("shoot")
+	var shoot_just_pressed := Input.is_action_just_pressed("shoot")
+	if weapon.wants_to_fire(shoot_pressed, shoot_just_pressed) and weapon.try_fire():
 		play_shoot_effects.rpc()
-		gunshot_sound.play()
+		weapon.play_fire_sound()
 		if raycast.is_colliding() && str(raycast.get_collider()).contains("CharacterBody3D") :
 			var hit_player: Object = raycast.get_collider()
-			hit_player.recieve_damage.rpc_id(hit_player.get_multiplayer_authority())
+			hit_player.recieve_damage.rpc_id(hit_player.get_multiplayer_authority(), weapon.get_damage())
 
 	if Input.is_action_just_pressed("respawn"):
 		recieve_damage(2)
@@ -109,8 +110,7 @@ func _physics_process(delta: float) -> void:
 func play_shoot_effects() -> void:
 	anim_player.stop()
 	anim_player.play("shoot")
-	muzzle_flash.restart()
-	muzzle_flash.emitting = true
+	weapon.play_muzzle_flash()
 
 @rpc("any_peer")
 func recieve_damage(damage:= 1) -> void:
