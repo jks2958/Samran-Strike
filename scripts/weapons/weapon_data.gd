@@ -25,7 +25,7 @@ enum FireMode {
 ## Seconds a reload takes to complete.
 @export var reload_time: float = 0.0
 ## Maximum hitscan distance, in meters.
-@export var range: float = 50.0
+@export var max_range: float = 50.0
 ## Recoil strength applied when firing. Reserved for future weapons.
 @export var recoil: float = 0.0
 ## Whether the weapon fires once per trigger pull or continuously.

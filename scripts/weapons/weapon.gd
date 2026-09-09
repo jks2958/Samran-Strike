@@ -48,7 +48,7 @@ func get_damage() -> int:
 	return weapon_data.damage if weapon_data else 0
 
 func get_range() -> float:
-	return weapon_data.range if weapon_data else 0.0
+	return weapon_data.max_range if weapon_data else 0.0
 
 func get_state() -> State:
 	if _reload_remaining > 0.0:
